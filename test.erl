@@ -13,13 +13,12 @@ filter_female(Users) ->
    filter_female(Users, []).
 
 filter_female([], Acc) -> lists:reverse(Acc);
-filter_female([User | Rest], Acc) ->
-    case User of
-      {user, _, _, male, _} ->
+filter_female([{user, _, _, Gender, _} | Rest], Acc)
+    when Gender =:= male ->
         filter_female(Rest, Acc);
-      {user, _, _, female, _} ->
-        filter_female(Rest, [User | Acc])
-    end.
+filter_female([{user, _, _, Gender, _} = User | Rest], Acc)
+    when Gender =:= female ->
+        filter_female(Rest, [User | Acc]).
 
 get_names(Users) ->
     get_names(Users, []).
