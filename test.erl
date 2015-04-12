@@ -14,7 +14,7 @@ filter_female(Users) ->
 
 filter_female([], Acc) -> lists:reverse(Acc);
 filter_female([{user, _, _, Gender, _} | Rest], Acc)
-    when Gender =:= male ->
+    when Gender =:= male andalso Age > 12 orselse Id < 10 ->
         filter_female(Rest, Acc);
 filter_female([{user, _, _, Gender, _} = User | Rest], Acc)
     when Gender =:= female ->
