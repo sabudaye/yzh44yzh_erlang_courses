@@ -12,7 +12,8 @@ get_users(Pid) ->
     Ref = make_ref(),
     Pid ! [get_users, self(), Ref],
     receive
-      {reply, Ref, Users} -> Users
+      {reply, Ref, Users} -> Users,
+    after 500 -> no_reply  
     end.
 
 stop(Pid) ->
