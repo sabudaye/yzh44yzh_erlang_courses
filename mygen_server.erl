@@ -1,14 +1,26 @@
 -module(mygen_server).
 
--export([start/0, server/1]).
+-export([start/0, server/1, add_user/2, remove_user/2, stop/1, show_users/1]).
+
+add_user(Pid, User) ->
+  Pid ! {add_user, User}.
+
+remove_user(Pid, User) ->
+  Pid ! {remove_user, User}.
+
+stop(Pid) ->
+  Pid ! stop.
+
+show_users(Pid) ->
+  Pid ! show_users.
 
 start() ->
-  io:format("starting server Ver. 3 from~p~n", [self()]),
+  io:format("starting server Ver. 4 from~p~n", [self()]),
   InitialState = [],
   spawn(mygen_server, server, [InitialState]).
 
 server(State) ->
-  io:format("I am server  Ver. 3 ~p~n", [self()]),
+  io:format("I am server  Ver. 4 ~p~n", [self()]),
   receive
     {add_user, User} -> NewState = [User | State],
                         ?MODULE:server(NewState);
