@@ -1,6 +1,6 @@
 -module(mygen_server).
 
--export([start/0, server/1, add_user/2, remove_user/2, stop/1, show_users/1]).
+-export([start/0, server/1, add_user/2, remove_user/2, stop/1, get_users/1]).
 
 add_user(Pid, User) ->
   Pid ! {add_user, User}.
@@ -8,23 +8,28 @@ add_user(Pid, User) ->
 remove_user(Pid, User) ->
   Pid ! {remove_user, User}.
 
+get_users(Pid) ->
+    Ref = make_ref(),
+    Pid ! [get_users, self(), Ref],
+    receive
+      {reply, Ref, Users} -> Users
+    end.
+
 stop(Pid) ->
   Pid ! stop.
 
-show_users(Pid) ->
-  Pid ! show_users.
-
 start() ->
-  io:format("starting server Ver. 4 from~p~n", [self()]),
+  io:format("starting server from~p~n", [self()]),
   InitialState = [],
   spawn(mygen_server, server, [InitialState]).
 
 server(State) ->
-  io:format("I am server  Ver. 4 ~p~n", [self()]),
+  io:format("I am server ~p~n", [self()]),
   receive
     {add_user, User} -> NewState = [User | State],
                         ?MODULE:server(NewState);
-    show_users -> io:format("users are ~p~n", [State]),
+    [get_users, From, Ref] ->
+                  From ! {reply, Ref, State},
                   ?MODULE:server(State);
     {remove_user, User} ->
                   NewState = lists:delete(User, State),
