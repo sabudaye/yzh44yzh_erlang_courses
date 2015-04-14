@@ -22,6 +22,7 @@ get_routes() ->
     [
       {"/", index_handler, []},
       {"/user/:user_id", user_handler, []},
+      {"/static/[...]", cowboy_static, {dir, "./static"}},
       {'_', not_found_handler, []}
     ]
  }].
