@@ -10,15 +10,19 @@ init(_Transport, Req, _Options) ->
 handle(Req, State) ->
   {Host, _} = cowboy_req:host(Req),
   {Path, _} = cowboy_req:path(Req),
-  % {Url, _} = cowboy_req:url(Req),
-  % {QueryString, _} = cowboy_req:qs(Req),
-  % {GetParams, _} = cowboy:req:qs_vals(Req),
-  % {ok, PostParams, _} = cowboy_req:body_qs(Req),
+  {Url, _} = cowboy_req:url(Req),
+  {QueryString, _} = cowboy_req:qs(Req),
+  {GetParams, _} = cowboy_req:qs_vals(Req),
+  {ok, PostParams, _} = cowboy_req:body_qs(Req),
   {UserId, _} = cowboy_req:binding(user_id, Req),
 
   Reply = ["<h1>user handler</h1>",
            "<p>Host:", Host, "</p>",
            "<p>Path:", Path, "</p>",
+           "<p>Url:", Url, "</p>",
+           "<p>QueryString:", QueryString, "</p>",
+           "<p>GetParams:", show_params(GetParams), "</p>",
+           "<p>PostParams:", show_params(PostParams), "</p>",
            "<p>UserId:", UserId, "</p>"],
   Reply2 = unicode:characters_to_binary(Reply),
   Headers = [{<<"Content-Type">>, <<"text/html;charset=UTF-8">>}],
@@ -27,3 +31,9 @@ handle(Req, State) ->
 
 terminate(_Reason, _Req, _State) ->
   ok.
+
+show_params(Params) ->
+  P = lists:map(fun({Key, Value}) ->
+                  ["<li><b>", Key, "</b>:", Value, "</li>"]
+            end, Params),
+  ["<ul>", P, "</ul>"].
