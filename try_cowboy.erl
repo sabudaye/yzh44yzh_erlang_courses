@@ -1,8 +1,8 @@
 -module(try_cowboy).
 
--export([init/0]).
+-export([start/0]).
 
-init() ->
+start() ->
   io:format("starting cowboy~n"),
   ok = application:start(crypto),
   ok = application:start(ranch),
