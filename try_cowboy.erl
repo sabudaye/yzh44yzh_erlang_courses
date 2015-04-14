@@ -20,6 +20,8 @@ start() ->
 get_routes() ->
  [{'_',
     [
-      {"/", index_handler, []}
+      {"/", index_handler, []},
+      {"/user/:user_id", user_handler, []},
+      {'_', not_found_handler, []}
     ]
  }].
